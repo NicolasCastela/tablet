@@ -6,8 +6,8 @@
                 <h1 class="text-center">Registro</h1>
                 <v-alert class="mb-10 mt-10" v-if="msgSucess" color="success" icon="$success"
                     title="Usuario Criado com Sucesso" :value=msgSucess>{{ msgSucess }}</v-alert>
-                <v-alert class="mb-10 mt-10" v-if="msgInvalid" density="compact" type="warning" title="Erro no cadastro!">{{
-                    msgInvalid }}</v-alert>
+                <v-alert class="mb-10 mt-10" v-if="msgInvalid" density="compact" type="warning" title="Erro no cadastro!"
+                    >{{ msgInvalid }}</v-alert>
 
                 <v-form @submit.prevent="registrar">
                     <v-text-field v-model="nome" label="Nome" required></v-text-field>
@@ -16,18 +16,13 @@
                         <v-btn class="me-auto" type="submit" color="green">Registrar</v-btn>
                     </v-sheet>
                 </v-form>
-                <v-card class="mt-10" width="400">
-                <v-card-item class="">
-                    <v-card-title>Nome: {{ data.name }}</v-card-title>
-                    <v-card-subtitle>ID: {{ data.id }}</v-card-subtitle>
-                </v-card-item>
-                </v-card>
+                
             </v-col>
             <v-col>
                 <v-container>
                     <h1 class="text-center"> Adicionar Face</h1>
                     <v-card>
-
+                        <v-text-field v-model="id" label="Digite o ID"></v-text-field>
                         <v-card-title style=" font-size: 14px;" class="text-center text-red">IMPORTANTE: só é possível
                             enviar imagem após ter criado um registro de usuário </v-card-title>
 
@@ -58,8 +53,7 @@ export default {
             id: "",
             msgSucess: "",
             imagem: null,
-            msgInvalid: "",
-            data:{}
+            msgInvalid: ""
         };
     },
     methods: {
@@ -93,83 +87,79 @@ export default {
                     throw new Error("Erro na solicitação POST");
                 }
 
+                this.msgSucess = `Usuário: ${this.nome} (ID: ${this.id}) adicionado com sucesso.`;
                 this.nome = "";
                 this.id = "";
                 this.msgInvalid = ''
                 const createPersonResult = await createPersonResponse.json();
                 console.log(createPersonResult);
-                this.nome = createPersonResult.data.name;
-                this.id = createPersonResult.data.id;
-                this.msgSucess = `Usuário: ${this.nome} (ID: ${this.id}) adicionado com sucesso.`;
-                this.id = ''
-
-                this.nome = ''
             } catch (error) {
                 console.error(error);
             }
         }, openFileInput() {
-            this.$refs.fileInput.click();
-        },
-        handleFileChange(event) {
-            const file = event.target.files[0];
-            this.imagem = file;
-        },
-        async enviarImagemBase64() {
-            try {
-                if (!this.imagem) {
-                    console.error("Por favor, selecione uma imagem.");
-                    return;
-                }
+      this.$refs.fileInput.click();
+    },
+    handleFileChange(event) {
+      const file = event.target.files[0];
+      this.imagem = file;
+    },
+    async enviarImagemBase64() {
+      try {
+        if (!this.imagem) {
+          console.error("Por favor, selecione uma imagem.");
+          return;
+        }
 
-                const personId = this.data.id;
+        const personId = this.data.id;
 
-                const reader = new FileReader();
-                reader.onloadend = async () => {
-                    const base64String = reader.result.split(",")[1];
+        const reader = new FileReader();
+        reader.onloadend = async () => {
+          const base64String = reader.result.split(",")[1]; 
 
-                    const formData = new FormData();
-                    formData.append("pass", this.pass);
-                    formData.append("personId", personId);
-                    formData.append("imgBase64", base64String);
-                    const response = await fetch("http://192.168.15.34:8090/face/create", {
-                        method: "POST",
-                        body: formData,
-                    });
+          const formData = new FormData();
+          formData.append("pass", this.pass);
+          formData.append("personId", personId);
+          formData.append("imgBase64", base64String); 
 
-                    const responseData = await response.json();
-                    console.log("Resposta da API:", responseData);
+          const response = await fetch("http://192.168.15.34:8090/face/create", {
+            method: "POST",
+            body: formData,
+          });
 
-                    if (response.ok) {
-                        console.log("Imagem enviada com sucesso!");
-                    } else {
-                        console.error("Erro ao enviar imagem:", responseData.error);
-                    }
-                };
+          const responseData = await response.json();
+          console.log("Resposta da API:", responseData);
 
-                reader.readAsDataURL(this.imagem);
-            } catch (error) {
-                console.error("Erro durante o registro da face", error);
-            }
-        },
+          if (response.ok) {
+            console.log("Imagem enviada com sucesso!");
+          } else {
+            console.error("Erro ao enviar imagem:", responseData.error);
+          }
+        };
+
+        reader.readAsDataURL(this.imagem);
+      } catch (error) {
+        console.error("Erro durante o registro da face", error);
+      }
+    },
     },
     async mounted() {
-        try {    
-            const pass = "12345678";
-            const id = '';
+    try {
+      const pass = "12345678";
+      const id = '1';
 
-            const findResponse = await fetch(
-                `http://192.168.15.34:8090/person/find?pass=${pass}&id=${id}`
-            );
+      const findResponse = await fetch(
+        `http://192.168.15.34:8090/person/find?pass=${pass}&id=${id}`
+      );
 
-            if (!findResponse.ok) {
-                throw new Error("Erro na solicitação GET");
-            }
+      if (!findResponse.ok) {
+        throw new Error("Erro na solicitação GET");
+      }
 
-            const findData = await findResponse.json();
-            this.data = findData.data;
-        } catch (error) { 
-            console.error(error);
-        }
+      const findData = await findResponse.json();
+      this.data = findData.data;
+    } catch (error) {
+      console.error(error);
     }
+  }
 };
 </script>
