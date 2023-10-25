@@ -43,10 +43,6 @@
       ></v-pagination>
     </div>
   </v-container>
-
-          
-
-
     </v-container>
   </div>
 </template>
