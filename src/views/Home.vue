@@ -4,12 +4,18 @@
   </div>
   <div class="d-flex justify-center mt-10">
     <h1>Bem-Vindo</h1>
-  </div>
+
+</div>
+
 </template>
 
 <script>
+import Principal from '@/components/Principal.vue';
 export default {
   name: 'Home',
+  components:{
+    Principal
+  }
 };
 </script>
 
