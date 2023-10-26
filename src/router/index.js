@@ -8,14 +8,14 @@ const routes = [
     component: Home
   },
   {
-    path: '/about',
-    name: 'about',
-    component: () => import( '../views/AboutView.vue')
+    path: '/pessoas',
+    name: 'pessoas',
+    component: () => import( '../views/Pessoas.vue')
   },
   {
-    path: '/consumo',
-    name: 'consumo',
-    component: () => import( '../views/Consumo.vue')
+    path: '/portaria',
+    name: 'portaria',
+    component: () => import( '../views/Portaria.vue')
   },
   {
     path: '/registro',

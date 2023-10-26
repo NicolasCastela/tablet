@@ -17,7 +17,7 @@
 
 <script>
 export default {
-  name: "Principal",
+  name: "Portaria",
   data() {
     return {
       data: {},

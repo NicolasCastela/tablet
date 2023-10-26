@@ -1,11 +1,14 @@
 <template>
   <div class="d-flex justify-center">
-    <img class="w-25 rotating-svg" src="../../public/img/corinthians-50.svg">
+    <!-- <img class="w-25 rotating-svg" src="../../public/img/corinthians-50.svg"> -->
   </div>
-  <div class="d-flex justify-center mt-10">
-    <h1>Bem-Vindo</h1>
 
-</div>
+
+    <div class="d-flex justify-center mt-10">
+      
+      <Principal/>
+    </div>
+   
 
 </template>
 

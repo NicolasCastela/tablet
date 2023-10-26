@@ -6,9 +6,9 @@
           
       <v-list-item to="/home" prepend-icon="mdi-home-outline">Home</v-list-item>
       <v-divider></v-divider>
-      <v-list-item to="/about" prepend-icon="mdi-currency-usd">Pessoas</v-list-item>
+      <v-list-item to="/pessoas" prepend-icon="mdi-account-multiple-outline">Pessoas</v-list-item>
       <v-divider></v-divider>
-      <v-list-item to="/consumo" prepend-icon="mdi-shield-account">Portaria</v-list-item>
+      <v-list-item to="/portaria" prepend-icon="mdi-shield-account">Portaria</v-list-item>
       <v-divider></v-divider>
       <v-list-item to="/registro" prepend-icon="mdi-account-key-outline">Registro</v-list-item>
     </v-navigation-drawer>
