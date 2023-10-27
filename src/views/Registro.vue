@@ -1,68 +1,65 @@
 <template>
-  <v-container>
+  <v-container class="main-container">
     <v-row>
-      <v-col>
+      <v-col class="form-col">
 
         <h1 class="text-center mb-1">Registro</h1>
 
-        <v-alert class="mb-10 mt-10" v-if="msgSucess" color="success" icon="$success" title="Usuario Criado com Sucesso"
+        <v-alert class="mb-4" v-if="msgSucess" color="success" icon="$success" title="Usuario Criado com Sucesso"
           :value=msgSucess>{{ msgSucess }}</v-alert>
-        <v-alert class="mb-10 mt-10" v-if="msgInvalid" density="compact" type="warning" title="Erro no cadastro!">{{
+        <v-alert class="mb-4" v-if="msgInvalid" density="compact" type="warning" title="Erro no cadastro!">{{
           msgInvalid }}</v-alert>
 
         <v-form @submit.prevent="registrar">
           <v-text-field v-model="nome" label="Nome" required></v-text-field>
-          <!-- <v-text-field v-model="id" label="ID" required></v-text-field> -->
-          <div class="d-flex justify-center">
-            <v-btn class="" type="submit" color="green">Registrar</v-btn>
+          <div class="d-flex justify-center mt-4">
+            <v-btn class="primary-btn" type="submit">Registrar</v-btn>
           </div>
         </v-form>
+
+        <!-- Deletar -->
+        <h1 class="text-center mt-6">Deletar</h1>
+        <v-divider></v-divider>
+        <v-alert class="mb-4" v-if="msgSucess1" color="success" icon="$success" title="Usuario Excluido com Sucesso"
+          :value=msgSucess1>{{ msgSucess1 }}</v-alert>
+        <v-alert class="mb-4" v-if="msgInvalid1" density="compact" type="warning" title="Erro na Exclusão!">{{
+          msgInvalid1 }}</v-alert>
+
+        <v-form @submit.prevent="deletePerson">
+          <v-text-field v-model="idParaExcluir" label="ID"></v-text-field>
+          <div class="d-flex justify-center mt-4">
+            <v-btn class="danger-btn" type="submit">Excluir</v-btn>
+          </div>
+        </v-form>
+
+      </v-col>
+
+      <v-col class="image-col">
+
+        <h1 class="text-center">Adicionar Face</h1>
+        <v-text-field v-model="idParaEnvio" label="ID para Envio de Imagem"></v-text-field>
+        <v-card class="mb-4">
+          <v-card-title class="text-center text-red">IMPORTANTE: só é possível enviar imagem após ter criado um registro de usuário</v-card-title>
+        </v-card>
+
+        <v-alert class="mb-4 w-100" v-if="msgImage" color="success" icon="$success" title="Imagem enviada!">{{ msgImage }}</v-alert>
+
+        <div class="image-upload-container">
+          <v-img class="image-preview" width="300" :src="imageteste || '../../public/img/avataranonimo.jpg'"></v-img>
+          <input type="file" ref="fileInput" style="display: none" @change="handleFileChange">
+          <div class="image-upload-buttons">
+            <v-btn class="primary-btn" @click="openFileInput">Escolher Imagem</v-btn>
+            <v-btn class="success-btn" @click="enviarImagemBase64">Enviar</v-btn>
+          </div>
+        </div>
         <div>
           
-            <h1 class="text-center mt-10">Deletar</h1>
-            <v-divider></v-divider>
-            <v-alert class="mb-10 mt-10" v-if="msgSucess1" color="success" icon="$success" title="Usuario Excluido com Sucesso"
-          :value=msgSucess1>{{ msgSucess1 }}</v-alert>
-          <v-alert class="mb-10 mt-10" v-if="msgInvalid1" density="compact" type="warning" title="Erro na Exclusão!">{{
-          msgInvalid1 }}</v-alert>
-            <v-form @submit.prevent="deletePerson">
-              <!-- <v-text-field v-model="nomeParaExcluir" label="Nome"></v-text-field> -->
-              <v-text-field v-model="idParaExcluir" label="ID"></v-text-field>
-              <div class="d-flex justify-center">
-                <v-btn class="" type="submit" color="red">Excluir</v-btn>
-              </div>
-            </v-form>
-          
         </div>
-      </v-col>
-      <v-col>
-        <v-container>
-          <h1 class="text-center"> Adicionar Face</h1>
-          <v-text-field v-model="idParaEnvio" label="ID para Envio de Imagem"></v-text-field>
-          <v-card class="mb-5">
-            <!-- <v-text-field v-model="id" label="Digite o ID"></v-text-field> -->
-            <v-card-title style=" font-size: 14px;" class="text-center text-red">IMPORTANTE: só é possível
-              enviar imagem após ter criado um registro de usuário </v-card-title>
-
-          </v-card>
-          <div class="d-flex align-center justify-center flex-column">
-            <v-img class="text-center" width="300" src="../../public/img/avataranonimo.jpg"></v-img>
-            <div style="width: 300px;" class=" mt-5 d-flex justify-space-between">
-              <input type="file" ref="fileInput" style="display: none" @change="handleFileChange">
-              <v-btn id="enviarimg" @click="openFileInput"> Enviar Imagem</v-btn>
-              <v-btn @click="enviarImagemBase64" color="success">Enviar</v-btn>
-              
-            </div>
-          </div>
-          <div><v-btn @click="teste"></v-btn>
-            <img :src="imageteste" >
-          </div>
-        </v-container>
-
       </v-col>
     </v-row>
   </v-container>
 </template>
+
 
 <script>
 export default {
@@ -80,7 +77,8 @@ export default {
       idParaEnvio: "",
       nomeParaExcluir: "",
       idParaExcluir: "",
-      imageteste: ""
+      imageteste: "",
+      msgImage: ""
 
     };
   },
@@ -164,17 +162,20 @@ export default {
             method: "POST",
             body: formData,
           });
-
+             
           const responseData = await response.json();
           console.log("Resposta da API:", responseData);
 
           if (response.ok) {
             console.log("Imagem enviada com sucesso!");
+            // this.imageteste = 'data:image/png;base64, ' + base64String
+            this.msgImage = ` `;
+            this.apagarImg();
+            
           } else {
             console.error("Erro ao enviar imagem:", responseData.error);
           }
-        };
-
+        },
         reader.readAsDataURL(this.imagem);
       } catch (error) {
         console.error("Erro durante o registro da face", error);
@@ -226,6 +227,56 @@ export default {
       console.log("Ola msg->",  base64.feature)
       this.imageteste = 'data:image/png;base64, ' + base64.feature;
 
-  }}
+  },
+
+  
+}
 }
 </script>
+
+<style scoped>
+.main-container {
+  padding: 20px;
+}
+
+.form-col,
+.image-col {
+  background-color: #f9f9f9;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  margin: 0 10px;
+}
+
+.primary-btn {
+  background-color: #4caf50;
+  color: #fff;
+}
+
+.danger-btn {
+  background-color: #f44336;
+  color: #fff;
+}
+
+.image-upload-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 20px;
+}
+
+.image-preview {
+  margin-bottom: 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.image-upload-buttons {
+  display: flex;
+  justify-content: space-between;
+  width: 300px;
+}
+</style>
+
+
+

@@ -22,7 +22,7 @@ export default {
   },
 
   data: () => ({
-    cor : ''
+    cor : 'dark'
   }),
 }
 </script>

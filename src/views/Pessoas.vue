@@ -1,88 +1,74 @@
 <template>
-  <div class="about">
-    <v-container class="d-flex  justify-center">
+  <v-container>
+    <h1 class="text-center">Moradores</h1>
 
+    <v-spacer class="mt-10"></v-spacer>
+    <v-text-field v-model="search" append-icon="mdi-magnify" label="Buscar Moradores cadastrados" single-line
+      hide-details></v-text-field>
+    <v-data-table :headers="headers" :items="desserts" :search="search"></v-data-table>
 
-
-
-    </v-container>
-    <v-container>
-      <v-row align="center">
-        <v-col cols="10">
-          <v-text-field v-model="search" label="Buscar" single-line hide-details></v-text-field>
-        </v-col>
-        <v-col cols="2">
-          <v-btn icon><v-icon>mdi-magnify</v-icon></v-btn>
-        </v-col>
-      </v-row>
-
-    </v-container>
-    <v-container id="ola" class="d-flex flex-wrap">
-      <v-card v-for="(person, index) in pessoas.personInfos" :key="index" class="ma-10" id="cardapi">
-        <!-- <img id="imgapi" alt="User Avatar" :src="person.avatarUrl"> -->
-        <v-card-title> NOME: {{ person.name }}</v-card-title>
-        <v-card-subtitle>ID: {{ person.id }}</v-card-subtitle>
-        <v-btn @click="mostrarFaces(person.id)" class="mt-2 ml-auto">Ver mais</v-btn>
+    <div v-for="(person, index) in pessoas.data.personInfos" :key="index">
+      <v-card class="mx-auto mt-5" max-width="344">
+        <v-img src="https://cdn.vuetifyjs.com/images/cards/sunshine.jpg" height="200px" cover></v-img> 
+        <v-card-title>
+          Nome: {{ person.name }}
+        </v-card-title>
+        <v-card-subtitle>
+          ID: {{ person.id }}
+        </v-card-subtitle>
       </v-card>
-    </v-container>
-
-    <div class="text-center">
-      <v-pagination v-model="page" :length="4" prev-icon="mdi-menu-left" next-icon="mdi-menu-right"></v-pagination>
     </div>
 
-
-  </div>
+  </v-container>
 </template>
 
 <script>
 export default {
   data() {
     return {
-      search: '',
-      page: 1,
-      pessoas: {
-        pageInfo: {},
-        personInfos: [],
-        faces: []
-      }
+      personImgList: [],
+      pessoas: {}
+
     }
   },
-  methods: {
-  mostrarFaces(personId) {
-    const pass = '12345678';
+  // methods: {
+  //   mostrarFaces() {
+  //     const pass = '12345678';
+  //     const personId = '1';
+  //     fetch(`http://192.168.15.34:8090/face/find?pass=${pass}&personId=${personId}`, {
+  //       method: 'POST',
+  //       headers: {
+  //         'Content-Type': 'application/x-www-form-urlencoded'
+  //       }
+  //     })
+  //       .then(response => response.json())
+  //       .then(data => {
+  //         // const imageList = data.map((item) => item.path)
+  //         // const imageList = data
+  //         this.personImgList = data
+  //         // console.log(imageList)
 
-    fetch(`http://192.168.15.34:8090/face/find?pass=${pass}&personId=${personId}`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/x-www-form-urlencoded'
-      }
-    })
-      .then(response => response.json())
-      .then(data => {
-       
-        const pessoa = this.pessoas.personInfos.find(p => p.id === personId);
 
-
-        if (pessoa) {
-          pessoa.faces = data.data;
-          console.log(pessoa.faces);
-        }
-      })
-      .catch(error => {
-        console.error('Erro ao buscar faces:', error);
-      });
-  }
-},
+  //         // if (pessoa) {
+  //         //   pessoa.faces = data.data;
+  //         //   console.log(pessoa.faces);
+  //         // }
+  //       })
+  //       .catch(error => {
+  //         console.error('Erro ao buscar faces:', error);
+  //       });
+  //   }
+  // },
 
   mounted() {
-
-    fetch('http://192.168.15.34:8090/person/findByPage?pass=12345678&personId=-1&length=100&index=0  ', {
+    
+    fetch('http://192.168.15.34:8090/person/findByPage?personId=-1&length=-1&pass=12345678&index=0  ', {
       method: 'GET'
     })
       .then((resposta) => resposta.json())
       .then((data) => {
-        this.pessoas = data.data
-        console.log(data)
+        this.pessoas = data
+                console.log('console pessoas', data)
       })
   },
 
